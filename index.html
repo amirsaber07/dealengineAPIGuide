@@ -1,375 +1,76 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#111827" />
-  <meta name="description" content="Official DealEngine REST API developer documentation." />
-  <title>DealEngine API — Developer Documentation</title>
-  <link rel="stylesheet" href="assets/styles.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="DealEngine API v1 developer documentation: 28 endpoints, authentication, data conventions, pagination, webhooks and integration examples.">
+  <meta property="og:title" content="DealEngine API Reference">
+  <meta property="og:description" content="A complete developer guide to DealEngine's documented REST endpoints and webhooks.">
+  <meta property="og:type" content="website">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="assets/styles.css">
+  <title>DealEngine Developers — API Reference</title>
 </head>
 <body>
-  <div class="app-shell">
+  <div class="application" id="app">
     <header class="topbar">
-      <a class="brand" href="#overview" aria-label="DealEngine API home">
-        <span class="brand-mark">DE</span>
-        <span class="brand-name">DealEngine <span>Developers</span></span>
+      <button class="icon-button mobile-nav-toggle" id="menuToggle" type="button" aria-label="Open documentation navigation" aria-controls="sidebar" aria-expanded="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <a href="?doc=overview" class="brand" data-route="overview" aria-label="DealEngine developer docs home">
+        <span class="brand-icon"><span class="brand-glyph">D</span><span class="brand-glyph accent">E</span></span>
+        <span class="brand-text"><b>DealEngine</b><small>Developers</small></span>
       </a>
-      <div class="topbar-center"><span class="status-dot"></span> API v1 <span class="topbar-divider">/</span> Developer documentation</div>
-      <div class="topbar-actions">
-        <a class="top-link" href="https://dealengine.cloud" target="_blank" rel="noreferrer">DealEngine <span aria-hidden="true">↗</span></a>
-        <button class="mobile-menu" id="mobileMenu" aria-label="Open navigation" aria-expanded="false"><span></span><span></span><span></span></button>
-      </div>
+      <div class="header-divider"></div>
+      <div class="product-title">API Reference <span class="topbar-version">v1</span></div>
+      <div class="topbar-spacer"></div>
+      <button id="topSearch" class="header-search" type="button" aria-label="Search documentation">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+        <span>Search documentation...</span>
+        <kbd>⌘ K</kbd>
+      </button>
+      <a class="external-button" href="https://dealengine.cloud" target="_blank" rel="noopener noreferrer">DealEngine <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 5h6v6M19 5l-9 9M19 13v6H5V5h6"/></svg></a>
+      <button class="icon-button theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode" title="Toggle theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.1 15.4A8.5 8.5 0 0 1 8.6 3.9a8.6 8.6 0 1 0 11.5 11.5Z"/></svg>
+      </button>
     </header>
 
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-search">
-        <label class="searchbox" for="docSearch"><span class="search-icon">⌕</span><input id="docSearch" type="search" placeholder="Search documentation" autocomplete="off" /><kbd>⌘ K</kbd></label>
-      </div>
-      <nav class="side-nav" aria-label="Documentation navigation">
-        <div class="nav-label">GET STARTED</div>
-        <a class="nav-link active" href="#overview" data-search="overview introduction"><span class="nav-icon">⌂</span> Overview</a>
-        <a class="nav-link" href="#getting-started" data-search="getting started base url first request"><span class="nav-icon">➜</span> Getting started</a>
-        <a class="nav-link" href="#authentication" data-search="authentication bearer api key scopes permissions"><span class="nav-icon">▣</span> Authentication</a>
+    <div class="layout">
+      <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+      <aside id="sidebar" class="sidebar" aria-label="Documentation sidebar">
+        <div class="side-inner">
+          <button id="sideSearch" type="button" class="side-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg> Quick search <span>/</span></button>
+          <div class="sidebar-nav" id="sidebarNav"></div>
+          <div class="sidebar-bottom">
+            <div class="sidebar-support"><span class="support-icon">?</span><div><b>Need help?</b><span>Check the official Academy docs.</span></div></div>
+            <a class="side-footer-link" href="https://dealengine.cloud/academy#/" target="_blank" rel="noopener noreferrer">Visit DealEngine Academy <span>↗</span></a>
+          </div>
+        </div>
+      </aside>
 
-        <div class="nav-label nav-label-spaced">API REFERENCE <span class="nav-count">19</span></div>
-        <div class="nav-group-title">Core resources</div>
-        <a class="nav-link" href="#endpoint-me" data-search="me workspace key permissions scopes"><span class="method-dot get"></span> Me</a>
-        <a class="nav-link" href="#endpoint-clients" data-search="clients create update get list"><span class="method-dot get"></span> Clients <span class="mini-count">4</span></a>
-        <a class="nav-link" href="#endpoint-contacts" data-search="contacts people primary email"><span class="method-dot get"></span> Contacts <span class="mini-count">2</span></a>
-        <a class="nav-link" href="#endpoint-deals" data-search="deals pipeline amount stage"><span class="method-dot get"></span> Deals <span class="mini-count">2</span></a>
-        <a class="nav-link" href="#endpoint-quotations" data-search="quotations acceptance approval"><span class="method-dot get"></span> Quotations <span class="mini-count">2</span></a>
-        <a class="nav-link" href="#endpoint-contracts" data-search="contracts renewal terms"><span class="method-dot get"></span> Contracts <span class="mini-count">2</span></a>
-        <a class="nav-link" href="#endpoint-activities" data-search="activities notes tasks calls meetings timeline"><span class="method-dot get"></span> Activities</a>
-        <a class="nav-link" href="#endpoint-tags" data-search="tags library colour group"><span class="method-dot get"></span> Tags</a>
-        <div class="nav-group-title">Account management</div>
-        <a class="nav-link" href="#endpoint-feedback" data-search="feedback transparent email survey complaints"><span class="method-dot get"></span> Feedback</a>
-        <a class="nav-link" href="#endpoint-account-touches" data-search="account touches emails programs status"><span class="method-dot get"></span> Account touches</a>
-        <div class="nav-group-title">Integrations</div>
-        <a class="nav-link" href="#endpoint-transparent" data-search="transparent resource request result callback"><span class="method-dot post"></span> Transparent</a>
+      <main id="main" class="main" tabindex="-1">
+        <div id="content" class="content" aria-live="polite"></div>
+        <footer class="page-footer"><span>DealEngine API <strong>v1</strong></span><span>Documentation based on the supplied developer guide · No undocumented routes</span><a href="source/DealEngine-Developer-Guide.txt" download>Source guide ↓</a></footer>
+      </main>
 
-        <div class="nav-label nav-label-spaced">GUIDES</div>
-        <a class="nav-link" href="#filtering" data-search="filtering syncing updatedSince tags status"><span class="nav-icon">⌕</span> Filtering & syncing</a>
-        <a class="nav-link" href="#pagination" data-search="paging pagination limit offset hasMore"><span class="nav-icon">☷</span> Pagination</a>
-        <a class="nav-link" href="#conventions" data-search="conventions dates utc money null public ids"><span class="nav-icon">≡</span> Conventions</a>
-        <a class="nav-link" href="#errors" data-search="errors invalid unauthorized forbidden 404 429"><span class="nav-icon">⚠</span> Errors</a>
-        <a class="nav-link" href="#rate-limits" data-search="rate limits 600 requests retry after"><span class="nav-icon">◷</span> Rate limits</a>
-        <a class="nav-link" href="#idempotency" data-search="idempotency safe retries write"><span class="nav-icon">⟳</span> Idempotency</a>
-        <a class="nav-link" href="#webhooks" data-search="webhooks events delivery signature hmac retries"><span class="nav-icon">⌁</span> Webhooks</a>
-      </nav>
-      <div class="sidebar-footer"><div class="sidebar-footer-mark">DE</div><div><strong>DealEngine API</strong><span>Developer guide · v1</span></div><span class="version-pill">v1</span></div>
-    </aside>
-
-    <main class="main-content" id="mainContent">
-      <div class="content-grid">
-        <article class="docs-content">
-          <div class="breadcrumbs"><span>Documentation</span><span class="crumb-slash">/</span><span>API Reference</span></div>
-
-          <section class="doc-section hero-section" id="overview" data-title="Overview">
-            <div class="eyebrow"><span class="eyebrow-line"></span> DEALENGINE DEVELOPER PLATFORM</div>
-            <h1>Build with the<br /><span>DealEngine API.</span></h1>
-            <p class="hero-copy">Connect your systems to DealEngine. Read clients, deals, quotations and more, keep your data in sync, and react to business events with webhooks.</p>
-            <div class="hero-actions"><a class="button button-primary" href="#getting-started">Get started <span>→</span></a><a class="button button-secondary" href="#endpoint-me">Explore endpoints</a></div>
-            <div class="hero-meta"><span><i class="meta-check">✓</i> REST API</span><span><i class="meta-check">✓</i> JSON over HTTPS</span><span><i class="meta-check">✓</i> Versioned contract</span></div>
-            <div class="hero-code-card">
-              <div class="code-card-top"><span><i></i><i></i><i></i></span><span>Base URL</span><button class="copy-button" data-copy="https://dealengine.cloud/api/v1">Copy</button></div>
-              <code>https://dealengine.cloud/api/v1</code>
-              <div class="code-card-bottom"><span class="code-label">VERSION HEADER</span><code>X-API-Version</code><span class="code-note">Returned with every response</span></div>
-            </div>
-            <div class="stat-strip">
-              <div><strong>19</strong><span>documented endpoints</span></div>
-              <div><strong>600</strong><span>requests / minute / key</span></div>
-              <div><strong>200</strong><span>max rows per page</span></div>
-              <div><strong>10</strong><span>documentation chapters</span></div>
-            </div>
-          </section>
-
-          <section class="doc-section" id="getting-started" data-title="Getting started">
-            <div class="section-kicker">01 — FIRST REQUEST</div>
-            <h2>Getting started</h2>
-            <p>DealEngine exposes one REST API over HTTPS. Requests and responses use JSON. Every path is versioned, and a breaking change gets a new version rather than changing the shape at the existing address.</p>
-            <div class="callout callout-info"><span class="callout-icon">i</span><div><strong>Start with <code>GET /me</code></strong><p>It confirms which workspace the key belongs to, whom it acts as, its permissions and scopes, and its rate limit. Make this your first request.</p></div></div>
-            <div class="code-block"><div class="code-toolbar"><span>cURL</span><button class="copy-button" data-copy="curl -H &quot;Authorization: Bearer $DE_KEY&quot; \\\n  https://dealengine.cloud/api/v1/me">Copy</button></div><pre><code>curl -H "Authorization: Bearer $DE_KEY" \\
-  https://dealengine.cloud/api/v1/me</code></pre></div>
-            <div class="info-grid two-col">
-              <div class="info-card"><span class="card-icon">↗</span><strong>One base URL</strong><p>All API requests start with <code>https://dealengine.cloud/api/v1</code>.</p></div>
-              <div class="info-card"><span class="card-icon">◈</span><strong>Version awareness</strong><p>Log the <code>X-API-Version</code> response header to know which contract you are using.</p></div>
-            </div>
-          </section>
-
-          <section class="doc-section" id="authentication" data-title="Authentication">
-            <div class="section-kicker">02 — SECURITY</div>
-            <h2>Authentication</h2>
-            <p>Send your API key as a bearer token on every request. There is no session, login call or refresh flow: the key is the caller.</p>
-            <div class="code-block"><div class="code-toolbar"><span>HTTP header</span><button class="copy-button" data-copy="Authorization: Bearer de_live_a1b2c3d4_…">Copy</button></div><pre><code>Authorization: Bearer de_live_a1b2c3d4_…</code></pre></div>
-            <h3>How API keys work</h3>
-            <ul class="check-list">
-              <li>A key acts as one person and inherits that person's role, permissions and record scope.</li>
-              <li>A key can never see more than the person it represents. If their role changes, the key's access changes too.</li>
-              <li>A read-only key is refused on every write before permission checks take place.</li>
-              <li>The full key is shown only once at creation. DealEngine stores a hash, so a lost key must be replaced.</li>
-              <li>Keys can have an expiry. Expired, invalid or revoked keys fail authentication.</li>
-              <li>Keys also fail when the person is deactivated or removed, or the workspace is inactive, suspended or deleted.</li>
-            </ul>
-            <div class="callout callout-warning"><span class="callout-icon">!</span><div><strong>Keep your key private</strong><p>Never put an API key in browser-side JavaScript, public repositories, screenshots or URLs. Store it in a server-side secret or environment variable.</p></div></div>
-            <p class="small-note">Key format: <code>de_live_</code> followed by the eight characters shown in the Key column.</p>
-          </section>
-
-          <section class="doc-section" id="api-reference" data-title="API reference">
-            <div class="section-kicker">03 — ENDPOINTS</div>
-            <h2>API reference</h2>
-            <p>There are 19 documented endpoints today. Read endpoints cover core CRM records and account activity. Writes are available for clients and the Transparent resource-request result callback.</p>
-            <div class="callout callout-warning"><span class="callout-icon">!</span><div><strong>Not every DealEngine feature has an API</strong><p>Outreach (leads, campaigns and the reply inbox) and Account management judgements (Growth ideas, account health and insights, program settings and account reviews) currently have no API or webhook events. An undocumented path should be treated as unavailable, not as an outage.</p></div></div>
-            <div class="callout callout-info"><span class="callout-icon">i</span><div><strong>Invoice and payment endpoint note</strong><p>The guide overview mentions invoice and payment reads, and documents invoice-related filters and webhook events, but the current 19-row endpoint table does not list dedicated invoice or payment GET paths. This reference does not invent those paths.</p></div></div>
-          </section>
-
-          <section class="doc-section endpoint-section" id="endpoint-me" data-title="GET /me">
-            <div class="section-kicker">ENDPOINT · WORKSPACE</div><div class="endpoint-heading"><h2>Current API identity</h2><span class="method-badge method-get">GET</span></div>
-            <div class="endpoint-path"><code>/api/v1/me</code><button class="copy-button" data-copy="GET https://dealengine.cloud/api/v1/me">Copy</button></div>
-            <p>Returns the workspace associated with the key, the person it acts as, the key's permissions and scopes, and its rate limit.</p>
-            <div class="endpoint-meta"><span>Authentication required</span><span>No additional permission listed</span></div>
-          </section>
-
-          <section class="doc-section endpoint-section" id="endpoint-clients" data-title="Clients">
-            <div class="section-kicker">ENDPOINT GROUP · CLIENTS</div><h2>Clients</h2>
-            <p>Read and manage client accounts. The create request can include the client's first contact in the same call.</p>
-            <div class="endpoint-list">
-              <div class="endpoint-row"><span class="method-badge method-get">GET</span><code>/api/v1/clients</code><span class="endpoint-desc">List clients visible to the key, newest change first.</span></div>
-              <div class="endpoint-row"><span class="method-badge method-post">POST</span><code>/api/v1/clients</code><span class="endpoint-desc">Create a client, optionally with its first contact.</span><span class="permission">clients.create</span></div>
-              <div class="endpoint-row"><span class="method-badge method-get">GET</span><code>/api/v1/clients/{id}</code><span class="endpoint-desc">Retrieve one client by public ID.</span></div>
-              <div class="endpoint-row"><span class="method-badge method-patch">PATCH</span><code>/api/v1/clients/{id}</code><span class="endpoint-desc">Update only the fields included in the request.</span><span class="permission">clients.edit</span></div>
-            </div>
-            <h3>Create a client with its first contact</h3>
-            <p>The create body wraps the client and contact objects:</p>
-            <div class="code-block"><div class="code-toolbar"><span>JSON · Request body</span><button class="copy-button" data-copy="{\n  &quot;client&quot;: { &quot;companyName&quot;: &quot;Acme Trading&quot;, &quot;country&quot;: &quot;SA&quot; },\n  &quot;contact&quot;: { &quot;name&quot;: &quot;Sara Ali&quot;, &quot;email&quot;: &quot;sara@acme.example&quot; }\n}">Copy</button></div><pre><code>{
-  "client":  { "companyName": "Acme Trading", "country": "SA" },
-  "contact": { "name": "Sara Ali", "email": "sara@acme.example" }
-}</code></pre></div>
-            <h3>Client write fields</h3>
-            <p>Writes use input names, which differ from the shape returned by GET.</p>
-            <div class="field-cloud"><span>companyName</span><span>accountStatus</span><span>stageKey</span><span>industry</span><span>subIndustry</span><span>website</span><span>phone</span><span>companyEmail</span><span>taxNumber</span><span>addressLine</span><span>addressLine2</span><span>city</span><span>state</span><span>postcode</span><span>country</span><span>sizeBand</span><span>revenueBand</span><span>foundedYear</span><span>linkedinUrl</span><span>doNotContact</span><span>notes</span><span>ownerPublicId</span><span>accountManagerPublicId</span><span>salesAgentPublicId</span><span>parentPublicId</span><span>entityPublicId</span><span>defaultCurrency</span><span>defaultVatRate</span><span>defaultBreakdownSchemeKey</span><span>custom</span><span>tags</span></div>
-            <h3>Contact write fields</h3>
-            <div class="field-cloud"><span>name</span><span>title</span><span>department</span><span>email</span><span>phone</span><span>mobile</span><span>linkedinUrl</span><span>preferredLocale</span><span>isPrimary</span><span>custom</span></div>
-            <div class="callout callout-info"><span class="callout-icon">i</span><div><strong>PATCH behaviour</strong><p>Only sent fields change; omitted fields stay as they are. Custom values are merged over existing values. The body uses the same input names as create, not the GET response shape.</p></div></div>
-            <h3>Ownership and assignment rules</h3>
-            <ul>
-              <li><code>ownerPublicId</code> applies on PATCH. A create is always owned by the person represented by the key.</li>
-              <li>A client linked to Transparent keeps its Transparent-side owner.</li>
-              <li><code>accountManagerPublicId</code> requires <code>accounts.assign</code> (available only while Account management is on). The person must belong to the client's branch and, for a Transparent-linked client, be paired with an active Transparent user.</li>
-              <li><code>salesAgentPublicId</code> needs the permission required by the write and is subject to the same scope, branch-membership and Transparent-pairing checks.</li>
-              <li>Unknown field names are ignored, not rejected.</li>
-            </ul>
-          </section>
-
-          <section class="doc-section endpoint-section" id="endpoint-contacts" data-title="Contacts">
-            <div class="section-kicker">ENDPOINT GROUP · CONTACTS</div><h2>Contacts</h2><p>People at the accounts the key can see. Contact visibility follows the same account scope as the related clients.</p>
-            <div class="endpoint-list"><div class="endpoint-row"><span class="method-badge method-get">GET</span><code>/api/v1/contacts</code><span class="endpoint-desc">List contacts.</span></div><div class="endpoint-row"><span class="method-badge method-get">GET</span><code>/api/v1/contacts/{id}</code><span class="endpoint-desc">Retrieve one contact by public ID.</span></div></div>
-          </section>
-
-          <section class="doc-section endpoint-section" id="endpoint-deals" data-title="Deals">
-            <div class="section-kicker">ENDPOINT GROUP · DEALS</div><h2>Deals</h2><p>Read deals visible to the key, following the deal owner's scope.</p>
-            <div class="endpoint-list"><div class="endpoint-row"><span class="method-badge method-get">GET</span><code>/api/v1/deals</code><span class="endpoint-desc">List deals, newest change first.</span></div><div class="endpoint-row"><span class="method-badge method-get">GET</span><code>/api/v1/deals/{id}</code><span class="endpoint-desc">Retrieve one deal by public ID.</span></div></div>
-            <h3>Deal amount fields</h3><p><code>amountBase</code> is converted to the workspace's base currency using the rate in force when the amount was set. It does not change when exchange rates change later. A value of <code>0.00</code> beside a non-zero amount means no exchange rate is configured yet; it does not mean the deal is worth zero.</p>
-          </section>
-
-          <section class="doc-section endpoint-section" id="endpoint-quotations" data-title="Quotations">
-            <div class="section-kicker">ENDPOINT GROUP · QUOTATIONS</div><h2>Quotations</h2><p>Read quotations visible to the key, following the deal owner's scope.</p>
-            <div class="endpoint-list"><div class="endpoint-row"><span class="method-badge method-get">GET</span><code>/api/v1/quotations</code><span class="endpoint-desc">List quotations, newest change first.</span></div><div class="endpoint-row"><span class="method-badge method-get">GET</span><code>/api/v1/quotations/{id}</code><span class="endpoint-desc">Retrieve one quotation, including its acceptance record if it has one.</span></div></div>
-          </section>
-
-          <section class="doc-section endpoint-section" id="endpoint-contracts" data-title="Contracts">
-            <div class="section-kicker">ENDPOINT GROUP · CONTRACTS</div><h2>Contracts</h2><p>Read contracts visible to the key, ordered by soonest-ending first — useful for renewal lists.</p>
-            <div class="endpoint-list"><div class="endpoint-row"><span class="method-badge method-get">GET</span><code>/api/v1/contracts</code><span class="endpoint-desc">List contracts.</span></div><div class="endpoint-row"><span class="method-badge method-get">GET</span><code>/api/v1/contracts/{id}</code><span class="endpoint-desc">Retrieve one contract, including renewal terms.</span></div></div>
-          </section>
-
-          <section class="doc-section endpoint-section" id="endpoint-activities" data-title="Activities">
-            <div class="section-kicker">ENDPOINT GROUP · ACTIVITIES</div><h2>Activities</h2><p>Read the timeline: notes, tasks, calls, meetings and system-written rows such as stage changes and quotation events.</p>
-            <div class="endpoint-list"><div class="endpoint-row"><span class="method-badge method-get">GET</span><code>/api/v1/activities</code><span class="endpoint-desc">List timeline activities, newest first.</span></div></div>
-            <p>Activities follow the deal owner's scope. For a key that can see every deal, the timeline also includes account-level activities.</p>
-          </section>
-
-          <section class="doc-section endpoint-section" id="endpoint-feedback" data-title="Feedback">
-            <div class="section-kicker">ENDPOINT GROUP · ACCOUNT MANAGEMENT</div><h2>Feedback</h2><p>Read client feedback at accounts the key can see. Sources include Transparent, emails read as feedback and ratings clicked in account emails. Duplicates and feedback a person said is not feedback are excluded.</p>
-            <div class="endpoint-list"><div class="endpoint-row"><span class="method-badge method-get">GET</span><code>/api/v1/feedback</code><span class="endpoint-desc">List feedback, newest first.</span><span class="permission">Account management</span></div></div>
-          </section>
-
-          <section class="doc-section endpoint-section" id="endpoint-account-touches" data-title="Account touches">
-            <div class="section-kicker">ENDPOINT GROUP · ACCOUNT MANAGEMENT</div><h2>Account touches</h2><p>Read emails written by account programs at accounts the key can see, including status and reason. Subject and body are returned only for an email that was sent.</p>
-            <div class="endpoint-list"><div class="endpoint-row"><span class="method-badge method-get">GET</span><code>/api/v1/account-touches</code><span class="endpoint-desc">List account-program emails, newest first.</span><span class="permission">Account management</span></div></div>
-          </section>
-
-          <section class="doc-section endpoint-section" id="endpoint-tags" data-title="Tags">
-            <div class="section-kicker">ENDPOINT GROUP · WORKSPACE</div><h2>Tags</h2><p>Read the workspace tag library. Each tag includes its ID, name, colour, group, applicable record types and archived state. Resources also carry their own tags as a list of ID, name and colour. Client POST and PATCH accept tags as a list of names.</p>
-            <div class="endpoint-list"><div class="endpoint-row"><span class="method-badge method-get">GET</span><code>/api/v1/tags</code><span class="endpoint-desc">List the workspace tag library.</span></div></div>
-          </section>
-
-          <section class="doc-section endpoint-section" id="endpoint-transparent" data-title="Transparent integration">
-            <div class="section-kicker">ENDPOINT GROUP · TRANSPARENT</div><h2>Transparent integration</h2><p>Read a resource request by Transparent's own ID, then post the result back to DealEngine.</p>
-            <div class="endpoint-list"><div class="endpoint-row"><span class="method-badge method-get">GET</span><code>/api/v1/transparent/resource-requests/{transparentId}</code><span class="endpoint-desc">Retrieve one resource request.</span></div><div class="endpoint-row"><span class="method-badge method-post">POST</span><code>/api/v1/transparent/resource-requests/{transparentId}/result</code><span class="endpoint-desc">Post the answer to a resource request.</span><span class="permission">deals.edit</span></div></div>
-            <p>The result callback requires a non-read-only key and <code>deals.edit</code>. Unlike normal client writes, unknown field names in this callback are refused.</p>
-          </section>
-
-          <section class="doc-section" id="scope" data-title="Record scope">
-            <div class="section-kicker">04 — ACCESS CONTROL</div><h2>Record scope</h2>
-            <p>Every list and lookup is filtered by the key's record scope before data is returned.</p>
-            <div class="table-wrap"><table><thead><tr><th>Resource</th><th>Scope applied</th></tr></thead><tbody>
-              <tr><td>Clients, contacts, feedback, account touches</td><td>Accounts the key's person or team owns or looks after as account manager.</td></tr>
-              <tr><td>Deals, quotations, contracts, activities</td><td>Deal owner's scope.</td></tr>
-              <tr><td>Invoices and payments</td><td>Branches the person belongs to, with <code>invoices.view</code>.</td></tr>
-            </tbody></table></div>
-            <p>A client nobody owns can be opened by ID for every key, as in the app, but lists leave it out unless the key's person manages it. A record outside scope returns the same response as a record that does not exist. This intentionally prevents callers from confirming that an inaccessible ID is real.</p>
-          </section>
-
-          <section class="doc-section" id="filtering" data-title="Filtering and syncing">
-            <div class="section-kicker">05 — QUERY PARAMETERS</div><h2>Filtering & syncing</h2><p>All query parameters are optional and can be combined where listed.</p>
-            <div class="table-wrap"><table><thead><tr><th>Parameter</th><th>Works on</th><th>What it does</th></tr></thead><tbody>
-              <tr><td><code>q</code></td><td><code>/clients</code></td><td>Matches part of the company name.</td></tr>
-              <tr><td><code>accountStatus</code></td><td><code>/clients</code></td><td><code>active</code>, <code>on_hold</code> or <code>archived</code>.</td></tr>
-              <tr><td><code>status</code></td><td>Deals, quotations, contracts; invoices</td><td>Deals: <code>open</code>, <code>won</code>, <code>lost</code>. Quotations: <code>draft</code>, <code>pending</code>, <code>approved</code>, <code>rejected</code>, <code>sent</code>, <code>won</code>, <code>lost</code>, <code>expired</code>. Contracts: <code>active</code>, <code>renewed</code>, <code>ended</code>, <code>cancelled</code>. Invoices: <code>draft</code>, <code>issued</code>, <code>paid</code>, <code>void</code>.</td></tr>
-              <tr><td><code>stage</code></td><td><code>/deals</code></td><td>Pipeline stage stable key, not its editable name.</td></tr>
-              <tr><td><code>client</code></td><td>Quotations, contacts, contracts, activities, feedback, account-touches</td><td>Client ID to return only that account's records.</td></tr>
-              <tr><td><code>sentiment</code></td><td><code>/feedback</code></td><td><code>positive</code>, <code>neutral</code> or <code>negative</code>.</td></tr>
-              <tr><td><code>source</code></td><td><code>/feedback</code></td><td><code>transparent</code>, <code>email</code> or <code>survey</code>.</td></tr>
-              <tr><td><code>complaints</code></td><td><code>/feedback</code></td><td><code>true</code> for complaints only.</td></tr>
-              <tr><td><code>status</code></td><td><code>/account-touches</code></td><td><code>scheduled</code>, <code>draft</code>, <code>held</code>, <code>sent</code>, <code>skipped</code>, <code>cancelled</code> or <code>failed</code>. <code>sending</code> cannot be filtered.</td></tr>
-              <tr><td><code>since</code></td><td>Feedback, account-touches</td><td>ISO date-time; feedback received or emails written on or after it.</td></tr>
-              <tr><td><code>email</code></td><td><code>/contacts</code></td><td>Exact email address.</td></tr>
-              <tr><td><code>primary</code></td><td><code>/contacts</code></td><td><code>true</code> returns only each account's primary contact.</td></tr>
-              <tr><td><code>kind</code></td><td><code>/activities</code></td><td><code>note</code>, <code>task</code>, <code>call</code>, <code>meeting</code>, <code>stage_change</code>, <code>quote_event</code> or <code>system</code>.</td></tr>
-              <tr><td><code>deal</code>, <code>contact</code></td><td><code>/activities</code></td><td>Public ID of a deal or contact.</td></tr>
-              <tr><td><code>openTasks</code></td><td><code>/activities</code></td><td><code>true</code> returns tasks that are not done.</td></tr>
-              <tr><td><code>endsBefore</code></td><td><code>/contracts</code></td><td>Contracts ending before the given date.</td></tr>
-              <tr><td><code>updatedSince</code></td><td>Clients, deals, quotations, contacts, activities</td><td>ISO-8601 timestamp; records changed at or after it.</td></tr>
-              <tr><td><code>tags</code>, <code>tagsMode</code></td><td>Clients, deals, quotations, contacts, contracts, activities</td><td>Comma-separated tag names or IDs. Default matches any; <code>all</code> requires every tag; <code>none</code> excludes tagged records.</td></tr>
-              <tr><td><code>limit</code>, <code>offset</code></td><td>Every list</td><td>Page size and number of rows to skip. Default limit 50; maximum 200.</td></tr>
-            </tbody></table></div>
-            <h3>Incremental sync</h3><p>Store the timestamp of your last successful run and pass it as <code>updatedSince</code> to retrieve only changed records. Without it, each poll reads the full matching set again.</p>
-            <div class="code-block"><div class="code-toolbar"><span>cURL · Sync deals</span><button class="copy-button" data-copy="curl -H &quot;Authorization: Bearer $DE_KEY&quot; \\\n  &quot;https://dealengine.cloud/api/v1/deals?status=open&amp;updatedSince=2026-08-01T00:00:00Z&amp;limit=200&quot;">Copy</button></div><pre><code>curl -H "Authorization: Bearer $DE_KEY" \\
-  "https://dealengine.cloud/api/v1/deals?status=open&amp;updatedSince=2026-08-01T00:00:00Z&amp;limit=200"</code></pre></div>
-            <div class="callout callout-warning"><span class="callout-icon">!</span><div><strong>Two lists need full pagination</strong><p>Invoices are ordered by issue date and activities by creation time. For these two, page to the end rather than stopping at the first row already seen.</p></div></div>
-          </section>
-
-          <section class="doc-section" id="pagination" data-title="Pagination">
-            <div class="section-kicker">06 — LARGE DATASETS</div><h2>Pagination</h2><p>Every list uses the same response envelope. <code>total</code> is the full count matching your filters, not just the number of rows on the current page.</p>
-            <div class="code-block"><div class="code-toolbar"><span>JSON · List response</span><button class="copy-button" data-copy="{\n  &quot;data&quot;: [],\n  &quot;total&quot;: 137,\n  &quot;limit&quot;: 50,\n  &quot;offset&quot;: 0,\n  &quot;hasMore&quot;: true\n}">Copy</button></div><pre><code>{
-  "data": [ /* records */ ],
-  "total": 137,
-  "limit": 50,
-  "offset": 0,
-  "hasMore": true
-}</code></pre></div>
-            <p>Keep requesting while <code>hasMore</code> is true, increasing <code>offset</code> by <code>limit</code> each time. An unparseable limit falls back to the default; the maximum is enforced.</p>
-            <div class="table-wrap"><table><thead><tr><th>Parameter</th><th>Default</th><th>Rule</th></tr></thead><tbody><tr><td><code>limit</code></td><td>50</td><td>Maximum 200 rows.</td></tr><tr><td><code>offset</code></td><td>0</td><td>Maximum effective offset is 1,000,000.</td></tr></tbody></table></div>
-            <p>Offsets above 1,000,000 are read as 1,000,000 and return the same page again. Split datasets larger than one million rows with filters until each part is below that threshold.</p>
-          </section>
-
-          <section class="doc-section" id="conventions" data-title="Conventions">
-            <div class="section-kicker">07 — DATA FORMAT</div><h2>Conventions</h2>
-            <div class="convention-list">
-              <div><strong>Public IDs</strong><p>IDs are the public IDs shown in app URLs. Internal database IDs are never exposed.</p></div>
-              <div><strong>Money</strong><p>Money is always a string, accompanied by a currency code. JSON floating-point numbers are not used for money.</p></div>
-              <div><strong>Dates</strong><p>Dates are ISO-8601 in UTC, or <code>null</code>. Never a local-time string.</p></div>
-              <div><strong>Null values</strong><p>A missing value is <code>null</code>, never omitted.</p></div>
-              <div><strong>Stable keys</strong><p>Renamable values are sent as a stable key with a label. Match on the key; show the label.</p></div>
-              <div><strong>Countries</strong><p>Country codes use ISO 3166-1 alpha-2, such as <code>SA</code>. On writes, a code is returned; non-country text is stored as sent.</p></div>
-              <div><strong>Contact language</strong><p><code>preferredLocale</code> is a language code without a region (for example <code>fr</code>, <code>zh</code> or <code>yue</code>). Unknown codes are refused with <code>invalid</code>.</p></div>
-              <div><strong>Normalised values</strong><p>Email is stored lowercase. Recognisable LinkedIn URLs are normalised to a linkedin.com profile or company URL. A placeholder such as <code>n/a</code> is stored as <code>null</code>.</p></div>
-            </div>
-            <h3>Parent accounts</h3><p>A client under a parent carries a <code>parent</code> object. A child moves into its parent's branch, and its branch changes only with the parent. Naming another branch is refused with <code>branch_inGroup</code>; a parent in a branch the key's user does not belong to is refused with <code>parent_branchNotYours</code>.</p>
-            <h3>Deleted records</h3><p>Deleted clients, deals and quotations disappear from lists and return 404 by ID. A deleted client's contacts and the timeline of a deleted client or deal disappear too. Restoring a record gives that record a fresh <code>updatedAt</code>, but its contacts and timeline retain their old timestamps. Deleted contacts are gone permanently.</p>
-            <div class="callout callout-warning"><span class="callout-icon">!</span><div><strong>Deletes do not emit events</strong><p>No webhook or tombstone announces a deletion. A mirror that must remove deleted records needs to compare IDs periodically.</p></div></div>
-          </section>
-
-          <section class="doc-section" id="errors" data-title="Errors">
-            <div class="section-kicker">08 — TROUBLESHOOTING</div><h2>Errors</h2><p>Every failure has the same response shape: a machine-readable code and a human-readable message.</p>
-            <div class="code-block"><div class="code-toolbar"><span>JSON · Error response</span><button class="copy-button" data-copy="{ &quot;error&quot;: { &quot;code&quot;: &quot;forbidden&quot;, &quot;message&quot;: &quot;This key is read-only.&quot; } }">Copy</button></div><pre><code>{
-  "error": {
-    "code": "forbidden",
-    "message": "This key is read-only."
-  }
-}</code></pre></div>
-            <div class="table-wrap"><table><thead><tr><th>Code</th><th>HTTP</th><th>Meaning</th></tr></thead><tbody>
-              <tr><td><code>invalid</code></td><td><span class="http-code">400</span></td><td>Request body or parameter is wrong. The message explains which.</td></tr>
-              <tr><td><code>unauthorized</code></td><td><span class="http-code">401</span></td><td>Missing, invalid, revoked or expired key.</td></tr>
-              <tr><td><code>forbidden</code></td><td><span class="http-code">403</span></td><td>Read-only key on a write, missing permission, or Account management disabled for feedback/account-touches.</td></tr>
-              <tr><td><code>notFound</code></td><td><span class="http-code">404</span></td><td>Record does not exist or is outside the key's scope.</td></tr>
-              <tr><td><code>rateLimited</code></td><td><span class="http-code">429</span></td><td>Too many requests. Wait for <code>Retry-After</code>.</td></tr>
-              <tr><td><code>serverError</code></td><td><span class="http-code">500</span></td><td>Server-side failure. Retry with backoff; contact support if it persists.</td></tr>
-            </tbody></table></div>
-            <p>Authentication failures use the same wording so a caller cannot distinguish a revoked key from an invalid one. Out-of-scope records intentionally look like missing records.</p>
-            <h3>Validation examples</h3><p>Required or unique field failures return <code>invalid</code>, with messages such as <code>required:taxNumber</code> or <code>unique:taxNumber|Acme Trading</code>. Other documented validation codes include <code>internalDomain</code> and <code>unknownCurrency</code>. A contact validation failure during client creation is prefixed with <code>contact:</code>.</p>
-          </section>
-
-          <section class="doc-section" id="rate-limits" data-title="Rate limits">
-            <div class="section-kicker">09 — CAPACITY</div><h2>Rate limits</h2><p>Each API key is limited to <strong>600 requests per 60 seconds</strong>. Responses tell you where you stand.</p>
-            <div class="rate-card"><div><span class="rate-number">600</span><span class="rate-unit">requests / 60 seconds</span></div><div class="rate-bar"><span></span></div><div class="rate-foot"><span>Per API key</span><span>Fixed window</span></div></div>
-            <div class="table-wrap"><table><thead><tr><th>Header</th><th>Purpose</th></tr></thead><tbody><tr><td><code>X-RateLimit-Limit</code></td><td>Maximum requests in the window.</td></tr><tr><td><code>X-RateLimit-Remaining</code></td><td>Requests remaining in the current window.</td></tr><tr><td><code>X-RateLimit-Reset</code></td><td>Unix timestamp when the window resets.</td></tr><tr><td><code>Retry-After</code></td><td>Seconds to wait; present on a 429 response.</td></tr></tbody></table></div>
-            <p>Requests without a valid key are counted per IP address. Windows are fixed, not sliding, so a burst crossing a boundary can briefly reach twice the stated limit.</p>
-          </section>
-
-          <section class="doc-section" id="idempotency" data-title="Idempotency">
-            <div class="section-kicker">10 — SAFE RETRIES</div><h2>Idempotency</h2><p>Send an <code>Idempotency-Key</code> header on any write to make retries safe. If a network timeout leaves the result unknown, retrying with the same key and body returns the original response instead of creating a duplicate.</p>
-            <div class="code-block"><div class="code-toolbar"><span>cURL · Idempotent create</span><button class="copy-button" data-copy="curl -X POST https://dealengine.cloud/api/v1/clients \\\n  -H &quot;Authorization: Bearer $DE_KEY&quot; \\\n  -H &quot;Idempotency-Key: 8f2a1c4e-import-row-42&quot; \\\n  -H &quot;Content-Type: application/json&quot; \\\n  -d '{&quot;client&quot;:{&quot;companyName&quot;:&quot;Acme Trading&quot;}}'">Copy</button></div><pre><code>curl -X POST https://dealengine.cloud/api/v1/clients \\
-  -H "Authorization: Bearer $DE_KEY" \\
-  -H "Idempotency-Key: 8f2a1c4e-import-row-42" \\
-  -H "Content-Type: application/json" \\
-  -d '{"client":{"companyName":"Acme Trading"}}'</code></pre></div>
-            <ul><li>Same key and same body: first response is returned verbatim with <code>X-Idempotent-Replay: true</code>.</li><li>Same key with a different body: 400 error.</li><li>A repeated request while the first is still running: 400 error; retry a moment later.</li><li>Keys are retained for at least 24 hours, then may be forgotten.</li><li>Maximum key length is 120 characters. Use a reproducible value such as a queue message ID or stored UUID.</li></ul>
-          </section>
-
-          <section class="doc-section" id="webhooks" data-title="Webhooks">
-            <div class="section-kicker">11 — EVENT-DRIVEN INTEGRATIONS</div><h2>Webhooks</h2><p>The API lets you ask what happened. Webhooks notify your system when an event occurs. Add an endpoint from the Webhooks screen; the signing secret is shown once.</p>
-            <h3>Available events</h3>
-            <div class="event-grid"><span>quotation.sent</span><span>quotation.accepted</span><span>quotation.declined</span><span>quotation.expired</span><span>deal.won</span><span>deal.lost</span><span>approval.requested</span><span>approval.decided</span><span>invoice.issued</span><span>invoice.paid</span><span>invoice.voided</span><span>payment.received</span><span>feedback.received</span><span>touch.sent</span><span>tags.changed</span></div>
-            <p>An endpoint with no events selected receives all events. That is the default.</p>
-            <h3>Webhook request</h3>
-            <p>DealEngine sends a POST with the event in a header and in the JSON body.</p>
-            <div class="code-block"><div class="code-toolbar"><span>HTTP headers</span><button class="copy-button" data-copy="Content-Type: application/json\nUser-Agent: DealEngine-Webhooks/1\nX-DealEngine-Event: quotation.accepted\nX-DealEngine-Signature: t=1786694400,v1=6b1f…">Copy</button></div><pre><code>Content-Type: application/json
-User-Agent: DealEngine-Webhooks/1
-X-DealEngine-Event: quotation.accepted
-X-DealEngine-Signature: t=1786694400,v1=6b1f…</code></pre></div>
-            <div class="code-block"><div class="code-toolbar"><span>JSON · Payload shape</span><button class="copy-button" data-copy="{\n  &quot;id&quot;: &quot;evt_01KZXHHDRSJKBGB4M67F7M3CSE&quot;,\n  &quot;event&quot;: &quot;quotation.accepted&quot;,\n  &quot;occurredAt&quot;: &quot;2026-08-13T09:01:37.710Z&quot;,\n  &quot;workspace&quot;: { &quot;id&quot;: &quot;01KZR0…&quot;, &quot;name&quot;: &quot;Future Group KSA&quot; },\n  &quot;data&quot;: { &quot;object&quot;: &quot;quotation&quot;, &quot;id&quot;: &quot;01KZ…&quot;, &quot;status&quot;: &quot;won&quot; }\n}">Copy</button></div><pre><code>{
-  "id": "evt_01KZXHHDRSJKBGB4M67F7M3CSE",
-  "event": "quotation.accepted",
-  "occurredAt": "2026-08-13T09:01:37.710Z",
-  "workspace": { "id": "01KZR0…", "name": "Future Group KSA" },
-  "data": { "object": "quotation", "id": "01KZ…", "status": "won" }
-}</code></pre></div>
-            <p>For quotation and deal events, <code>data</code> uses the same resource shape returned by the API. Money events carry the invoice, including payments, <code>amountPaid</code> and <code>outstanding</code>. Approval events carry approval details and the quotation. Feedback and account-touch events use the same shapes as their corresponding GET endpoints. <code>data</code> is <code>null</code> if the record was deleted before delivery was built.</p>
-            <h3>Verify the signature</h3><p>The signature is an HMAC-SHA256 over the timestamp, a dot, and the raw request body, keyed with your endpoint secret. Reject timestamps more than 300 seconds out of date. Verify the raw body before JSON parsing or re-serialising it.</p>
-            <div class="code-block"><div class="code-toolbar"><span>Node.js · Signature verification</span><button class="copy-button" data-copy="import { createHmac, timingSafeEqual } from 'node:crypto';\n\nfunction verify(secret, body, header) {\n  const parts = Object.fromEntries(\n    header.split(',').map((p) => p.split('=', 2))\n  );\n  const t = Number(parts.t);\n  if (!Number.isFinite(t)) return false;\n  if (Math.abs(Date.now() / 1000 - t) > 300) return false;\n\n  const expected = createHmac('sha256', secret)\n    .update(`${t}.${body}`, 'utf8')\n    .digest('hex');\n  if (expected.length !== parts.v1.length) return false;\n  return timingSafeEqual(Buffer.from(expected), Buffer.from(parts.v1));\n}">Copy</button></div><pre><code>import { createHmac, timingSafeEqual } from 'node:crypto';
-
-// body must be the raw request text, before JSON parsing.
-function verify(secret, body, header) {
-  const parts = Object.fromEntries(
-    header.split(',').map((p) => p.split('=', 2))
-  );
-  const t = Number(parts.t);
-  if (!Number.isFinite(t)) return false;
-  if (Math.abs(Date.now() / 1000 - t) > 300) return false;
-
-  const expected = createHmac('sha256', secret)
-    .update(`${t}.${body}`, 'utf8')
-    .digest('hex');
-  if (expected.length !== parts.v1.length) return false;
-  return timingSafeEqual(Buffer.from(expected), Buffer.from(parts.v1));
-}</code></pre></div>
-            <div class="callout callout-danger"><span class="callout-icon">!</span><div><strong>Do not weaken signature verification</strong><p>Use a constant-time comparison and enforce the timestamp window. Re-serialising the JSON changes the bytes and causes verification to fail.</p></div></div>
-            <h3>Delivery, retries and endpoint health</h3>
-            <ul><li>Up to 7 attempts, with waits of 1, 5, 30, 120, 360 and 1,440 minutes between attempts.</li><li>Retried: 5xx, 408, 429, timeout or connection failure.</li><li>Not retried: 3xx and other 4xx responses.</li><li>Delivery is at-least-once. Store the stable event ID and ignore duplicates.</li><li>After 20 consecutive failures, the endpoint is switched off. Fix it and press Resume; events occurring while it is off are not queued. Catch up through the API with <code>updatedSince</code>.</li><li>Respond within 8 seconds. Return 2xx once the payload is received, then process asynchronously.</li><li>HTTPS only, no credentials in the URL, public host address required, and redirects are not followed.</li></ul>
-            <h3>Test your endpoint</h3><p>The Test button on the Webhooks screen sends a signed ping immediately. A 2xx response confirms the endpoint answered successfully. Test before relying on production delivery.</p>
-          </section>
-
-          <div class="docs-end"><div class="end-icon">✓</div><h2>You're ready to build.</h2><p>Use the API reference to read your DealEngine data, keep integrations in sync and respond to events safely.</p><a href="#overview" class="back-top">Back to top ↑</a></div>
-          <footer class="site-footer"><span>© DealEngine · Developer Documentation</span><span>API contract · v1</span></footer>
-        </article>
-        <aside class="right-rail">
-          <div class="rail-sticky"><div class="rail-title">ON THIS PAGE</div><a href="#getting-started">Getting started</a><a href="#authentication">Authentication</a><a href="#api-reference">API reference</a><a href="#scope">Record scope</a><a href="#filtering">Filtering & syncing</a><a href="#pagination">Pagination</a><a href="#conventions">Conventions</a><a href="#errors">Errors</a><a href="#rate-limits">Rate limits</a><a href="#idempotency">Idempotency</a><a href="#webhooks">Webhooks</a><div class="rail-help"><span class="help-icon">?</span><strong>Need help?</strong><p>Contact your DealEngine workspace administrator for API key access and permissions.</p><a href="https://dealengine.cloud" target="_blank" rel="noreferrer">Open DealEngine ↗</a></div></div>
-        </aside>
-      </div>
-    </main>
+      <aside id="rightRail" class="right-rail" aria-label="Code examples and on-page navigation">
+        <div id="railContent" class="rail-content"></div>
+      </aside>
+    </div>
   </div>
-  <div class="search-overlay" id="searchOverlay" aria-hidden="true"><div class="search-modal"><div class="search-modal-input"><span>⌕</span><input id="modalSearch" placeholder="Search API documentation…" /><kbd>ESC</kbd></div><div class="search-results" id="searchResults"><p>Type to search documentation</p></div></div></div>
-  <script src="assets/app.js"></script>
+
+  <div id="searchOverlay" class="search-overlay" aria-hidden="true">
+    <div class="search-shade" id="searchShade"></div>
+    <section class="search-dialog" role="dialog" aria-modal="true" aria-label="Search documentation">
+      <div class="search-input-row"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><input id="searchInput" type="search" autocomplete="off" spellcheck="false" placeholder="Search endpoints, methods, guides..." aria-label="Search docs"><button id="closeSearch" type="button" aria-label="Close search"><kbd>ESC</kbd></button></div>
+      <div id="searchResults" class="search-results"></div>
+      <div class="search-hint"><span><kbd>↑</kbd><kbd>↓</kbd> to navigate</span><span><kbd>↵</kbd> to open</span><span>28 documented endpoints</span></div>
+    </section>
+  </div>
+  <div id="toast" role="status" aria-live="polite" class="toast"></div>
+
+  <script defer src="assets/data.js"></script>
+  <script defer src="assets/app.js"></script>
 </body>
 </html>
